@@ -1,0 +1,2 @@
+class CustomerFnNotFound(Exception):
+    pass
