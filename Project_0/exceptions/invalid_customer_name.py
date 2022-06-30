@@ -1,0 +1,2 @@
+class InvalidCustomerName(Exception):
+    pass

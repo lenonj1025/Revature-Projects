@@ -1,2 +1,0 @@
-class CustomerFnNotFound(Exception):
-    pass

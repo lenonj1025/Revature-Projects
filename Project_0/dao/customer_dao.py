@@ -51,18 +51,20 @@ class CustomerDao:
 
             with conn.cursor() as cur:
                 cur.execute("SELECT * FROM customers WHERE first_name = %s", (first_name,))
+                list_customers = []
 
-                customer_row = cur.fetchall()
-                if not customer_row:
-                    return None
+                for customers in cur:
+                    customer_id = customers[0]
+                    first_name = customers[1]
+                    last_name = customers[2]
+                    checking_account = customers[3]
+                    savings_account = customers[4]
 
-                customer_id = customer_row[0]
-                first_name = customer_row[1]
-                last_name = customer_row[2]
-                checking_account = customer_row[3]
-                savings_account = customer_row[4]
+                    my_customers_object = Customer(customer_id, first_name, last_name,
+                                                   checking_account, savings_account)
+                    list_customers.append(my_customers_object)
 
-                return Customer(customer_id, first_name, last_name, checking_account, savings_account)
+                return list_customers
 
     def get_customer_by_last_name(self, last_name):
         with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
@@ -70,24 +72,20 @@ class CustomerDao:
 
             with conn.cursor() as cur:
                 cur.execute("SELECT * FROM customers WHERE last_name = %s", (last_name,))
+                list_customers = []
 
-                customer_row = cur.fetchall()
-                if not customer_row:
-                    return None
-                print(customer_row)
-                for c_row in customer_row:
-                    customer_id = c_row[0]
-                    print("customer_id = ", c_row[0])
-                    first_name = c_row[1]
-                    print("first_name = ", c_row[1])
-                    last_name = c_row[2]
-                    print("last_name = ", c_row[2])
-                    checking_account = c_row[3]
-                    print("checking_account = ", c_row[3])
-                    savings_account = c_row[4]
-                    print("savings_account = ", c_row[4], "\n")
+                for customers in cur:
+                    customer_id = customers[0]
+                    first_name = customers[1]
+                    last_name = customers[2]
+                    checking_account = customers[3]
+                    savings_account = customers[4]
 
-                return Customer(customer_id, first_name, last_name, checking_account, savings_account)
+                    my_customers_object = Customer(customer_id, first_name, last_name,
+                                                   checking_account, savings_account)
+                    list_customers.append(my_customers_object)
+
+                return list_customers
 
     def get_customer_by_id(self, customer_id):
         with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
@@ -107,3 +105,20 @@ class CustomerDao:
                 savings_account = customer_row[4]
 
                 return Customer(customer_id, first_name, last_name, checking_account, savings_account)
+
+    def add_customer(self, customer_object):   # User will represent a User Object
+        first_name_to_add = customer_object.first_name
+        last_name_to_add = customer_object.last_name
+
+        with psycopg.connect(host="127.0.0.1", port="5432", dbname="postgres", user="postgres",
+                             password="J1a0c2k5") as conn:
+
+            # Automatically close the cursor
+            with conn.cursor() as cur:
+                cur.execute("INSERT INTO customers (first_name, last_name) VALUES (%s, %s) RETURNING *",
+                            (first_name_to_add, last_name_to_add))
+
+                customer_row_inserted = cur.fetchone()
+                conn.commit()
+
+                return customer_row_inserted(customer_row_inserted[0], customer_row_inserted[1])
