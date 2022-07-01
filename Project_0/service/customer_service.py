@@ -37,7 +37,27 @@ class CustomerService:
         return customer_object.to_dict()
 
     def add_customer(self, customer_object):
-        if " " in customer_object.first_name or customer_object.last_name:
+        if " " in customer_object.first_name or " " in customer_object.last_name:
             raise InvalidCustomerName("First name and Last name cannot contain spaces!")
+        if len(customer_object.first_name) < 2:
+            raise InvalidCustomerName("First name must be at least two characters")
+        if len(customer_object.last_name) < 2:
+            raise InvalidCustomerName("Last name must be at least two characters")
+
         added_new_customer = self.customer_dao.add_customer(customer_object)
         return added_new_customer.to_dict()
+
+    def update_customer_by_id(self, customer_object):
+        print(customer_object)
+        updated_customer_object = self.customer_dao.update_customer_by_id(customer_object)
+        # print(updated_customer_object)
+        if updated_customer_object is None:
+            raise CustomerNotFound(f" Customer with id {customer_object.id} was not found")
+
+        return updated_customer_object.to_dict()
+
+    def delete_customer_by_id(self, customer_id):
+        if not self.customer_dao.delete_customer_by_id(customer_id):
+            raise CustomerNotFound(f"Customer with id {customer_id} was not found")
+
+
