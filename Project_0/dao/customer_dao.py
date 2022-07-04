@@ -19,7 +19,7 @@ class CustomerDao:
 
                     my_customers_object = Customer(customer_id, first_name, last_name)
                     list_customers.append(my_customers_object)
-
+                    print(list_customers)
                 return list_customers
 
     def get_customer_by_name(self, first_name, last_name):
@@ -94,7 +94,6 @@ class CustomerDao:
                 return Customer(customer_id, first_name, last_name)
 
     def add_customer(self, customer_object):
-        print(customer_object)
         first_name_to_add = customer_object.first_name
         last_name_to_add = customer_object.last_name
 
@@ -112,11 +111,9 @@ class CustomerDao:
                 return Customer(customer_row_inserted[0], customer_row_inserted[1], customer_row_inserted[2])
 
     def update_customer_by_id(self, customer_object):
-        # print(customer_object)
         with psycopg.connect(host="127.0.0.1", port="5432", user="postgres",
                              dbname="postgres", password="J1a0c2k5", options='-c search_path=project0') as conn:
 
-            # Automatically close the cursor
             with conn.cursor() as cur:
                 cur.execute("UPDATE project0.customers SET first_name = %s, last_name = %s WHERE id = %s RETURNING *",
                             (customer_object.first_name, customer_object.last_name, customer_object.id))

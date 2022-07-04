@@ -1,52 +1,105 @@
 from flask import Blueprint, request
-from service.accounts_service import AccountsService
-from exceptions.invalid_customer_name import InvalidCustomerName
-import controller.customer_controller
+# from controller.customer_controller import get_customer_by_id
 from modelcu.accounts import Accounts
 from exceptions.customer_not_found import CustomerNotFound
+from service.accounts_service import AccountsService
 
 acc_control = Blueprint('accounts_controller', __name__)
 account_service = AccountsService()
-# GET /customer/<customer_id>/account: get all accounts for customer(id:x) *DONE*
-# GET /customer/<customer_id>/account/<account_id>?amountLessThan=1000&amountGreaterThan=300:
-# get all accounts for customer(id:x)
-# GET /customer/<customer_id>/account/<account_id>: get account(id:y) belonging to customer(id:x)
-# PUT /customer/<customer_id>/account/<account_id>: update account(id:y) belonging to customer(id:x)
-# DELETE /customer/<customer_id>/account/<account_id>: delete account(id:y) belonging to customer(id:x)
+# GET /customer/<customer_id>/accounts: get all accounts for customer(id:x) *DONE*
+# GET /customer/<customer_id>/accounts/<account_id>?amountLessThan=1000&amountGreaterThan=300:
+# get all accounts for customer(id:x) *DONE*
+# GET /customer/<customer_id>/accounts/<account_id>: get account(id:y) belonging to customer(id:x) *DONE*
+# POST /customer/<customer_id>/accounts: create a new account for a customer(id:x) *DONE*
+# PUT /customer/<customer_id>/accounts/<account_id>: update account(id:y) belonging to customer(id:x)
+# DELETE /customer/<customer_id>/accounts/<account_id>: delete account(id:y) belonging to customer(id:x)
+
+# @acc_control.route('/customers/<customer_id>/accounts', methods=['GET'])
+# def get_all_accounts_by_customer_id(customer_id):
+#     try:
+#         return {
+#             "customers": account_service.get_all_accounts_by_customer_id(customer_id)
+#         }
+#     except CustomerNotFound as e:
+#         return {
+#             "message": str(e)
+#         }, 404
 
 @acc_control.route('/customers/<customer_id>/accounts', methods=['GET'])
-def get_all_accounts_by_customer_id(customer_id):
-    try:
-        return {
-            "customers": account_service.get_all_accounts_by_customer_id(customer_id)
-        }
-    except CustomerNotFound as e:
-        return {
-            "message": str(e)
-        }, 404
+def get_accounts(customer_id):
+    amount_greater_than = request.args.get('amountGreaterThan')
+    amount_less_than = request.args.get('amountLessThan')
 
-@acc_control.route('/customers/<customer_id>/accounts', methods=['GET'])
-def get_account_balance(customer_id):
-    balance_gt = request.args.get('amountGreaterThan')
-    balance_lt = request.args.get('amountLessThan')
+    if amount_greater_than is not None and amount_less_than is not None:
+        try:
+            return {
+                "accounts": account_service.get_account_balance(customer_id, amount_greater_than, amount_less_than)
+            }
+        except CustomerNotFound as e:
+            return {
+                       "message": str(e)
+                   }, 404
+    elif amount_greater_than is not None:
+        try:
+            return {
+                "accounts": account_service.get_account_by_greater_than(customer_id, amount_greater_than)
+            }
+
+        except CustomerNotFound as e:
+            return {
+                       "message": str(e)
+                   }, 404
+    elif amount_less_than is not None:
+        try:
+            return{
+                "accounts": account_service.get_account_by_less_than(customer_id, amount_less_than)
+            }
+        except CustomerNotFound as e:
+            return {
+                       "message": str(e)
+                   }, 404
+    else:
+        try:
+            return {
+                "customers": account_service.get_all_accounts_by_customer_id(customer_id)
+            }
+        except CustomerNotFound as e:
+            return {
+                       "message": str(e)
+                   }, 404
+
+@acc_control.route('/customers/<customer_id>/accounts/<account_id>', methods=['GET'])
+def get_account_by_customer_and_account_id(customer_id, account_id):
     try:
         return {
-            "Accounts": account_service.get_account_balance(customer_id, balance_gt, balance_lt)
+           "accounts": account_service.get_account_by_customer_and_account_id(customer_id, account_id)
         }
     except CustomerNotFound as e:
         return{
             "message": str(e)
         }, 404
 
-# @acc_control.route('/customers/<customer_id>/accounts/<account_id>', methods=['PUT'])
-# def update_acct_by_cust_and_acct_id(customer_id, account_id):
-#     try:
-#         get_customer_by_id(customer_id)
-#         accounts_json_dictionary = request.get_json()
-#         return account_service.update_acct_by_cust_and_acct_id(Accounts(account_id, accounts_json_dictionary['balance'],
-#                                                              accounts_json_dictionary['customer_id'],
-#                                                              accounts_json_dictionary['account_type_id']))
-#     except CustomerNotFound as e:
-#         return{
-#             "message": str(e)
-#         }, 404
+@acc_control.route('/customers/<customer_id>/accounts', methods=['POST'])
+def add_account_to_customer(customer_id):
+    accounts_json_dictionary = request.get_json()
+    account_object = Accounts(None, accounts_json_dictionary['balance'], accounts_json_dictionary['customer_id'],
+                              accounts_json_dictionary['account_type_id'])
+    try:
+        return account_service.add_account_to_customer1(account_object), 201
+    except CustomerNotFound as e:
+        return{
+            "message": str(e)
+        }, 400
+
+
+@acc_control.route('/customers/<customer_id>/accounts/<account_id>', methods=['PUT'])
+def update_acct_by_cust_and_acct_id(customer_id, account_id):
+    try:
+        accounts_json_dictionary = request.get_json()
+        return account_service.update_acct_by_cust_and_acct_id1(Accounts(account_id, accounts_json_dictionary['balance']
+                                                                         , accounts_json_dictionary['customer_id'],
+                                                                         accounts_json_dictionary['account_type_id']))
+    except CustomerNotFound as e:
+        return{
+            "message": str(e)
+        }, 404

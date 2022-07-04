@@ -16,7 +16,6 @@ class CustomerService:
         customer_object = self.customer_dao.get_customer_by_name(first_name, last_name)
         if not customer_object:
             raise CustomerNotFound(f"User with name {first_name} {last_name} was not found")
-
         return customer_object.to_dict()
 
     def get_customer_by_first_name(self, first_name):
@@ -26,7 +25,6 @@ class CustomerService:
 
     def get_customer_by_last_name(self, last_name):
         list_of_customers = self.customer_dao.get_customer_by_last_name(last_name)
-
         return list(map(lambda y: y.to_dict(), list_of_customers))
 
     def get_customer_by_id(self, customer_id):
@@ -48,9 +46,7 @@ class CustomerService:
         return added_new_customer.to_dict()
 
     def update_customer_by_id(self, customer_object):
-        print(customer_object)
         updated_customer_object = self.customer_dao.update_customer_by_id(customer_object)
-        # print(updated_customer_object)
         if updated_customer_object is None:
             raise CustomerNotFound(f" Customer with id {customer_object.id} was not found")
 

@@ -12,79 +12,79 @@ customer_service = CustomerService()
 # PUT /customer/<customer_id>: Update customer by id
 # DELETE /customer/<customer_id>: Delete customer by id *DONE*
 
+# @cust_control.route('/customers', methods=['GET'])
+# def get_all_customers():
+#     return {
+#         "customers": customer_service.get_all_customers()
+#     }
+
 @cust_control.route('/customers', methods=['GET'])
-def get_all_customers():
-    return {
-        "customers": customer_service.get_all_customers()
-    }
-
-# @cust_control.route('/customers/users', methods=['GET'])
-# def get_customers_by_specifics():
-#     first_name = request.args.get('firstname')
-#     last_name = request.args.get('lastname')
-#
-#     if None not in (first_name, last_name):
-#         try:
-#             return customer_service.get_customer_by_name(first_name, last_name)
-#         except CustomerNotFound as e:
-#             return {
-#                        "message": str(e)
-#                    }, 404
-#     elif first_name is not None:
-#         try:
-#             return {
-#                 "customers": customer_service.get_customer_by_first_name(first_name)
-#             }
-#         except CustomerNotFound as e:
-#             return {
-#                        "message": str(e)
-#                    }, 404
-#     elif last_name is not None:
-#         try:
-#             return {
-#                 "customers": customer_service.get_customer_by_last_name(last_name)
-#             }
-#         except CustomerNotFound as e:
-#             return {
-#                        "message": str(e)
-#                    }, 404
-#     elif first_name is None and last_name is None:
-#         return{
-#             CustomerNotFound
-#         }, 404
-
-@cust_control.route('/customers/<first_name>_<last_name>', methods=['GET'])
-def get_customer_by_name(first_name, last_name):
-    try:
-        return customer_service.get_customer_by_name(first_name, last_name)
-    except CustomerNotFound as e:
-        return{
-            "message": str(e)
-        }, 404
-
-@cust_control.route('/customers/usersf', methods=['GET'])
-def get_customer_by_first_name():
+def get_customers():
     first_name = request.args.get('firstname')
-    try:
-        return {
-            "customers": customer_service.get_customer_by_first_name(first_name)
-        }
-    except CustomerNotFound as e:
-        return{
-            "message": str(e)
-        }, 404
-
-@cust_control.route('/customers/usersl', methods=['GET'])
-def get_customer_by_last_name():
     last_name = request.args.get('lastname')
-    try:
+
+    if first_name is not None and last_name is not None:
+        try:
+            return customer_service.get_customer_by_name(first_name, last_name)
+        except CustomerNotFound as e:
+            return {
+                       "message": str(e)
+                   }, 404
+    elif first_name is not None:
+        try:
+            return {
+                "customers": customer_service.get_customer_by_first_name(first_name)
+            }
+        except CustomerNotFound as e:
+            return {
+                       "message": str(e)
+                   }, 404
+    elif last_name is not None:
+        try:
+            return {
+                "customers": customer_service.get_customer_by_last_name(last_name)
+            }
+        except CustomerNotFound as e:
+            return {
+                       "message": str(e)
+                   }, 404
+    else:
         return {
-            "customers": customer_service.get_customer_by_last_name(last_name)
+            "customers": customer_service.get_all_customers()
         }
-    except CustomerNotFound as e:
-        return{
-            "message": str(e)
-        }, 404
+
+# @cust_control.route('/customers/<first_name>_<last_name>', methods=['GET'])
+# def get_customer_by_name(first_name, last_name):
+#     try:
+#         return customer_service.get_customer_by_name(first_name, last_name)
+#     except CustomerNotFound as e:
+#         return{
+#             "message": str(e)
+#         }, 404
+#
+# @cust_control.route('/customers/usersf', methods=['GET'])
+# def get_customer_by_first_name():
+#     first_name = request.args.get('firstname')
+#     try:
+#         return {
+#             "customers": customer_service.get_customer_by_first_name(first_name)
+#         }
+#     except CustomerNotFound as e:
+#         return{
+#             "message": str(e)
+#         }, 404
+#
+# @cust_control.route('/customers/usersl', methods=['GET'])
+# def get_customer_by_last_name():
+#     last_name = request.args.get('lastname')
+#     try:
+#         return {
+#             "customers": customer_service.get_customer_by_last_name(last_name)
+#         }
+#     except CustomerNotFound as e:
+#         return{
+#             "message": str(e)
+#         }, 404
 
 @cust_control.route('/customers/<customer_id>', methods=['GET'])
 def get_customer_by_id(customer_id):
