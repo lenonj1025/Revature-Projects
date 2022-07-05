@@ -62,7 +62,7 @@ def get_customers():
 #             "message": str(e)
 #         }, 404
 #
-# @cust_control.route('/customers/usersf', methods=['GET'])
+# @cust_control.route('/customers/users', methods=['GET'])
 # def get_customer_by_first_name():
 #     first_name = request.args.get('firstname')
 #     try:
@@ -74,7 +74,7 @@ def get_customers():
 #             "message": str(e)
 #         }, 404
 #
-# @cust_control.route('/customers/usersl', methods=['GET'])
+# @cust_control.route('/customers/users', methods=['GET'])
 # def get_customer_by_last_name():
 #     last_name = request.args.get('lastname')
 #     try:

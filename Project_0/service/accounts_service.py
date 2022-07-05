@@ -33,8 +33,8 @@ class AccountsService:
         if not self.accounts_dao.get_account_by_customer_and_account_id(customer_id, account_id):
             raise CustomerNotFound(f"Customer with account id {account_id} was not found")
 
-        return list(map(lambda y: y.to_dict(), self.accounts_dao.get_account_by_customer_and_account_id
-        (customer_id, account_id)))
+        return list(map(lambda y: y.to_dict(), self.accounts_dao.get_account_by_customer_and_account_id(customer_id,
+                                                                                                        account_id)))
 
     def add_account_to_customer1(self, account_object):
         if account_object.balance < 0:
@@ -47,11 +47,14 @@ class AccountsService:
         added_new_account = self.accounts_dao.add_account_to_customer2(account_object)
         return added_new_account.to_dict()
 
-    def update_acct_by_cust_and_acct_id1(self, account_object):
-        updated_account_object = self.accounts_dao.update_acct_by_cust_and_acct_id2(account_object)
+    def update_acct_by_cust_and_acct_id(self, account_object):
+        updated_account_object = self.accounts_dao.update_acct_by_cust_and_acct_id(account_object)
         if updated_account_object is None:
             raise CustomerNotFound(f" Account with id {account_object.id} was not found")
 
         return updated_account_object.to_dict()
 
+    def delete_account_by_account_id(self, customer_id, account_id):
+        if not self.accounts_dao.delete_account_by_account_id(customer_id, account_id):
+            raise CustomerNotFound(f"Customer with id {customer_id} was not found")
 

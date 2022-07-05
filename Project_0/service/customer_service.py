@@ -55,5 +55,3 @@ class CustomerService:
     def delete_customer_by_id(self, customer_id):
         if not self.customer_dao.delete_customer_by_id(customer_id):
             raise CustomerNotFound(f"Customer with id {customer_id} was not found")
-
-

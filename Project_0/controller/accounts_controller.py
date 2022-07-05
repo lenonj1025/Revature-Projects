@@ -11,7 +11,7 @@ account_service = AccountsService()
 # get all accounts for customer(id:x) *DONE*
 # GET /customer/<customer_id>/accounts/<account_id>: get account(id:y) belonging to customer(id:x) *DONE*
 # POST /customer/<customer_id>/accounts: create a new account for a customer(id:x) *DONE*
-# PUT /customer/<customer_id>/accounts/<account_id>: update account(id:y) belonging to customer(id:x)
+# PUT /customer/<customer_id>/accounts/<account_id>: update account(id:y) belonging to customer(id:x) *DONE*
 # DELETE /customer/<customer_id>/accounts/<account_id>: delete account(id:y) belonging to customer(id:x)
 
 # @acc_control.route('/customers/<customer_id>/accounts', methods=['GET'])
@@ -96,10 +96,24 @@ def add_account_to_customer(customer_id):
 def update_acct_by_cust_and_acct_id(customer_id, account_id):
     try:
         accounts_json_dictionary = request.get_json()
-        return account_service.update_acct_by_cust_and_acct_id1(Accounts(account_id, accounts_json_dictionary['balance']
-                                                                         , accounts_json_dictionary['customer_id'],
-                                                                         accounts_json_dictionary['account_type_id']))
+        return account_service.update_acct_by_cust_and_acct_id(Accounts(account_id,
+                                                                        accounts_json_dictionary['balance'],
+                                                                        accounts_json_dictionary['customer_id'],
+                                                                        accounts_json_dictionary['account_type_id']))
     except CustomerNotFound as e:
         return{
+            "message": str(e)
+        }, 404
+
+@acc_control.route('/customers/<customer_id>/accounts/<account_id>', methods=['DELETE'])
+def delete_account_by_account_id(customer_id, account_id):
+    try:
+        account_service.delete_account_by_account_id(customer_id, account_id)
+
+        return {
+            "message": f"Customer with id {customer_id} deleted successfully"
+        }
+    except CustomerNotFound as e:
+        return {
             "message": str(e)
         }, 404

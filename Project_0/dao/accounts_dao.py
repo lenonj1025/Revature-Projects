@@ -116,7 +116,7 @@ class AccountsDao:
                 return Accounts(account_row_inserted[0], account_row_inserted[1],
                                 account_row_inserted[2], account_row_inserted[3])
 
-    def update_acct_by_cust_and_acct_id2(self, account_object):
+    def update_acct_by_cust_and_acct_id(self, account_object):
         with psycopg.connect(host="127.0.0.1", port="5432", user="postgres",
                              dbname="postgres", password="J1a0c2k5", options='-c search_path=project0') as conn:
 
@@ -133,3 +133,19 @@ class AccountsDao:
 
                 return Accounts(account_row_updated[0], account_row_updated[1],
                                 account_row_updated[2], account_row_updated[3])
+
+    def delete_account_by_account_id(self, customer_id, account_id):
+        with psycopg.connect(host="127.0.0.1", port="5432", user="postgres",
+                             dbname="postgres", password="J1a0c2k5", options='-c search_path=project0') as conn:
+
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM project0.accounts WHERE customer_id = %s AND id = %s",
+                            (customer_id, account_id,))
+
+                rows_deleted = cur.rowcount
+
+                if rows_deleted != 1:
+                    return False
+                else:
+                    conn.commit()
+                    return True
