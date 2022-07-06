@@ -38,15 +38,15 @@ class AccountsDao:
                     list_accounts.append(my_account_object)
                 return list_accounts
 
-    def get_account_by_greater_than(self, customer_id, account_id):
+    def get_account_by_greater_than(self, customer_id, amount_greater_than):
         with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
                              dbname="postgres", password="J1a0c2k5", options='-c search_path=project0') as conn:
 
             with conn.cursor() as cur:
                 cur.execute("SELECT act.* "
-                            "FROM accounts act JOIN project0.customers c  ON c.id = act.customer_id "
-                            "WHERE customer_id = %s AND account_id = %s",
-                            (customer_id, account_id,))
+                            "FROM accounts act JOIN project0.customers c ON c.id = act.customer_id "
+                            "WHERE customer_id = %s AND act.balance > %s",
+                            (customer_id, amount_greater_than,))
                 list_accounts = []
 
                 for accounts in cur:
@@ -93,10 +93,10 @@ class AccountsDao:
 
                 for row in cur:
                     list_accounts.append(Accounts(row[0], row[1], row[2], row[3]))
-
+                print(list_accounts)
                 return list_accounts
 
-    def add_account_to_customer2(self, account_object):
+    def add_account_to_customer(self, account_object):
         balance_to_add = account_object.balance
         customer_id_to_add = account_object.customer_id
         account_type_id_to_add = account_object.account_type_id

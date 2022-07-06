@@ -1,0 +1,2 @@
+class AccountTypeError(Exception):
+    pass

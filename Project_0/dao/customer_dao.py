@@ -19,7 +19,7 @@ class CustomerDao:
 
                     my_customers_object = Customer(customer_id, first_name, last_name)
                     list_customers.append(my_customers_object)
-                    print(list_customers)
+
                 return list_customers
 
     def get_customer_by_name(self, first_name, last_name):
