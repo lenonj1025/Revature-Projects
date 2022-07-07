@@ -31,7 +31,7 @@ def test_get_all_customers(mocker):
 def test_get_customer_by_name_positive(mocker):
     def mock_get_customer_by_name(self, first_name, last_name):
         if first_name == "test1a" and last_name == "test1b":
-            return Customer(1, "test1a", "test1b")
+            return Customer(1, "test1a",  "test1b")
         else:
             return None
     mocker.patch("dao.customer_dao.CustomerDao.get_customer_by_name", mock_get_customer_by_name)
