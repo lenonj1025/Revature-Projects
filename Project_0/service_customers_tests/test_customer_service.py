@@ -58,17 +58,24 @@ def test_get_customer_by_name_negative(mocker):
 def test_get_customer_by_first_name_positive(mocker):
     def mock_get_customer_by_first_name(self, first_name):
         if first_name == "test1a":
-            return [Customer(1, "test1a", "test1b")]
+            return [Customer(1, "test1a", "test1b"), Customer(2, "test1a", "test2b")]
         else:
             return None
     mocker.patch("dao.customer_dao.CustomerDao.get_customer_by_first_name", mock_get_customer_by_first_name)
     customer_service = CustomerService()
     actual = customer_service.get_customer_by_first_name("test1a")
-    assert actual == [{
-        "id": 1,
-        "first_name": "test1a",
-        "last_name": "test1b"
-    }]
+    assert actual == [
+        {
+            "id": 1,
+            "first_name": "test1a",
+            "last_name": "test1b"
+        },
+        {
+            "id": 2,
+            "first_name": "test1a",
+            "last_name": "test2b"
+        }
+    ]
 
 def test_get_customer_by_first_name_negative(mocker):
 

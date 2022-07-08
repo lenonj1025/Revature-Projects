@@ -4,7 +4,6 @@ from modelcu.accounts import Accounts
 import exceptions.customer_exceptions as ce
 import exceptions.accounts_exceptions as ae
 from service.accounts_service import AccountsService
-from exceptions.account_not_found import AccountNotFound
 
 acc_control = Blueprint('accounts_controller', __name__)
 account_service = AccountsService()

@@ -3,3 +3,6 @@ class AccountNotFound(Exception):
 
 class AccountTypeError(Exception):
     pass
+
+class AccountsNegativeBalance(Exception):
+    pass

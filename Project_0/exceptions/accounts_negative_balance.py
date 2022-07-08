@@ -1,0 +1,2 @@
+class AccountsNegativeBalance(Exception):
+    pass

@@ -19,14 +19,14 @@ class CustomerService:
 
     def get_customer_by_first_name(self, first_name):
         list_of_customers = self.customer_dao.get_customer_by_first_name(first_name)
-        if len(list_of_customers) == 0:
+        if not list_of_customers:
             raise ce.CustomerNotFound(f"Customer with first name {first_name} was not found")
         return list(map(lambda y: y.to_dict(), list_of_customers))
 
     def get_customer_by_last_name(self, last_name):
         list_of_customers = self.customer_dao.get_customer_by_last_name(last_name)
-        if len(list_of_customers) == 0:
-            raise ce.CustomerNotFound(f"Customer with first name {last_name} was not found")
+        if not list_of_customers:
+            raise ce.CustomerNotFound(f"Customer with last name {last_name} was not found")
         return list(map(lambda y: y.to_dict(), list_of_customers))
 
     def get_customer_by_id(self, customer_id):

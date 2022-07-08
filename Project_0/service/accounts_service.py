@@ -2,6 +2,7 @@ from dao.customer_dao import CustomerDao
 from dao.accounts_dao import AccountsDao
 import exceptions.customer_exceptions as ce
 import exceptions.accounts_exceptions as ae
+from modelcu.accounts import Accounts
 
 class AccountsService:
 
@@ -18,41 +19,53 @@ class AccountsService:
         list_of_accounts = self.accounts_dao.get_account_balance(customer_id, amount_greater_than, amount_less_than)
         if self.customer_dao.get_customer_by_id(customer_id) is None:
             raise ce.CustomerNotFound(f"Customer with id {customer_id} was not found")
-        if len(list_of_accounts) == 0:
-            raise ae.AccountNotFound(f"No account with amount greater than {amount_greater_than} or amount less "
+        if not list_of_accounts:
+            raise ae.AccountNotFound(f"No account(s) with amount greater than {amount_greater_than} or amount less "
                                      f"than {amount_less_than} was found")
-        return list(map(lambda y: y.to_dict(), list_of_accounts))
+        if isinstance(list_of_accounts, Accounts):
+            return list_of_accounts.to_dict()
+        else:
+            return list(map(lambda y: y.to_dict(), list_of_accounts))
 
     def get_account_by_greater_than(self, customer_id, amount_greater_than):
         list_of_accounts = self.accounts_dao.get_account_by_greater_than(customer_id, amount_greater_than)
+        print(list_of_accounts)
         if self.customer_dao.get_customer_by_id(customer_id) is None:
             raise ce.CustomerNotFound(f"Customer with id {customer_id} was not found")
-        if len(list_of_accounts) == 0:
-            raise ae.AccountNotFound(f"No account with amount greater than {amount_greater_than} was found")
-        return list(map(lambda y: y.to_dict(), list_of_accounts))
+        if not list_of_accounts:
+            raise ae.AccountNotFound(f"No account(s) with amount greater than {amount_greater_than} was found")
+        if isinstance(list_of_accounts, Accounts):
+            return list_of_accounts.to_dict()
+        else:
+            return list(map(lambda y: y.to_dict(), list_of_accounts))
 
     def get_account_by_less_than(self, customer_id, amount_less_than):
         list_of_accounts = self.accounts_dao.get_account_by_less_than(customer_id, amount_less_than)
         if self.customer_dao.get_customer_by_id(customer_id) is None:
             raise ce.CustomerNotFound(f"Customer with id {customer_id} was not found")
-        if len(list_of_accounts) == 0:
-            raise ae.AccountNotFound(f"No account with amount less than {amount_less_than} was found")
-        return list(map(lambda y: y.to_dict(), list_of_accounts))
+        if not list_of_accounts:
+            raise ae.AccountNotFound(f"No account(s) with amount less than {amount_less_than} was found")
+        if isinstance(list_of_accounts, Accounts):
+            return list_of_accounts.to_dict()
+        else:
+            return list(map(lambda y: y.to_dict(), list_of_accounts))
 
     def get_account_by_customer_and_account_id(self, customer_id, account_id):
-        a = self.accounts_dao.get_account_by_customer_and_account_id(customer_id, account_id)
+        list_of_accounts = self.accounts_dao.get_account_by_customer_and_account_id(customer_id, account_id)
         if self.customer_dao.get_customer_by_id(customer_id) is None:
             raise ce.CustomerNotFound(f"Customer with id {customer_id} was not found")
-        if len(a) == 0:
+        if not list_of_accounts:
             raise ae.AccountNotFound(f"Account with id {account_id} was not found")
-        return list(map(lambda y: y.to_dict(), self.accounts_dao.get_account_by_customer_and_account_id(customer_id,
-                                                                                                        account_id)))
+        if isinstance(list_of_accounts, Accounts):
+            return list_of_accounts.to_dict()
+        else:
+            return list(map(lambda y: y.to_dict(), list_of_accounts))
 
     def add_account_to_customer(self, account_object):
         if self.customer_dao.get_customer_by_id(account_object.customer_id) is None:
             raise ce.CustomerNotFound(f"Customer with id {account_object.customer_id} was not found")
         if int(account_object.balance) < 0:
-            raise ce.CustomerNotFound("Cannot have a negative balance!")
+            raise ae.AccountsNegativeBalance("Cannot have a negative balance!")
         if int(account_object.account_type_id) not in range(1, 3):
             raise ae.AccountTypeError("Not a savings or checking account!")
         added_new_account = self.accounts_dao.add_account_to_customer(account_object)
@@ -72,6 +85,3 @@ class AccountsService:
         if not self.accounts_dao.delete_account_by_account_id(customer_id, account_id):
             raise ae.AccountNotFound(f"Account with id {account_id} for customer was not found")
         return self.accounts_dao.delete_account_by_account_id(customer_id, account_id)
-
-
-
