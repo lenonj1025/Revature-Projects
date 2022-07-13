@@ -5,11 +5,6 @@ import exceptions.customer_exceptions as ce
 
 cust_control = Blueprint('customer_controller', __name__)
 customer_service = CustomerService()
-# GET /customers: get all customers *DONE*
-# GET /customer/<customer_id>: get customers by id *DONE*
-# POST /customers: create new customer *DONE*
-# PUT /customer/<customer_id>: Update customer by id *DONE*
-# DELETE /customer/<customer_id>: Delete customer by id *DONE*
 
 @cust_control.route('/customers', methods=['GET'])
 def get_customers():

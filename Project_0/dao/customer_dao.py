@@ -1,7 +1,6 @@
 import psycopg
 from modelcu.customer import Customer
 
-
 class CustomerDao:
     def get_all_customers(self):
         with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
@@ -130,11 +129,9 @@ class CustomerDao:
         with psycopg.connect(host="127.0.0.1", port="5432", user="postgres",
                              dbname="postgres", password="J1a0c2k5", options='-c search_path=project0') as conn:
 
-            # Automatically close the cursor
             with conn.cursor() as cur:
                 cur.execute('DELETE FROM project0.customers WHERE id = %s', (customer_id,))
 
-                # Check number of rows that are deleted
                 rows_deleted = cur.rowcount
 
                 if rows_deleted != 1:

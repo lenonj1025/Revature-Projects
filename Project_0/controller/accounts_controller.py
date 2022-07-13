@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-# from controller.customer_controller import get_customer_by_id
 from modelcu.accounts import Accounts
 import exceptions.customer_exceptions as ce
 import exceptions.accounts_exceptions as ae
@@ -7,24 +6,6 @@ from service.accounts_service import AccountsService
 
 acc_control = Blueprint('accounts_controller', __name__)
 account_service = AccountsService()
-# GET /customer/<customer_id>/accounts: get all accounts for customer(id:x) *DONE*
-# GET /customer/<customer_id>/accounts/<account_id>?amountLessThan=1000&amountGreaterThan=300:
-# get all accounts for customer(id:x) *DONE*
-# GET /customer/<customer_id>/accounts/<account_id>: get account(id:y) belonging to customer(id:x) *DONE*
-# POST /customer/<customer_id>/accounts: create a new account for a customer(id:x) *DONE*
-# PUT /customer/<customer_id>/accounts/<account_id>: update account(id:y) belonging to customer(id:x) *DONE*
-# DELETE /customer/<customer_id>/accounts/<account_id>: delete account(id:y) belonging to customer(id:x) *DONE*
-
-# @acc_control.route('/customers/<customer_id>/accounts', methods=['GET'])
-# def get_all_accounts_by_customer_id(customer_id):
-#     try:
-#         return {
-#             "customers": account_service.get_all_accounts_by_customer_id(customer_id)
-#         }
-#     except CustomerNotFound as e:
-#         return {
-#             "message": str(e)
-#         }, 404
 
 @acc_control.route('/customers/<customer_id>/accounts', methods=['GET'])
 def get_accounts(customer_id):
