@@ -1,0 +1,2 @@
+class ReimbNegativeError(Exception):
+    pass

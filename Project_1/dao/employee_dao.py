@@ -149,3 +149,25 @@ class EmployeeDao:
                                 employee_that_was_inserted[4], employee_that_was_inserted[5],
                                 employee_that_was_inserted[6], employee_that_was_inserted[7],
                                 employee_that_was_inserted[8])
+
+    def update_employee_by_id(self, employee_object):
+        with psycopg.connect(host="127.0.0.1", port="5432", user="postgres",
+                             dbname="postgres", password="J1a0c2k5", options='-c search_path=project1') as conn:
+
+            with conn.cursor() as cur:
+                cur.execute("UPDATE project1.employees SET username = %s, pwd = %s, first_name = %s, "
+                            "last_name = %s, gender = %s, phone_number = %s, email_address = %s, "
+                            "role_employee = %s WHERE id = %s RETURNING *",
+                            (employee_object.username, employee_object.password, employee_object.first_name,
+                             employee_object.last_name, employee_object.gender, employee_object.phone_number,
+                             employee_object.email_address, employee_object.role_employee, employee_object.id))
+
+                conn. commit()
+
+                employee_row_updated = cur.fetchone()
+                if employee_row_updated is None:
+                    return None
+
+                return Employee(employee_row_updated[0], employee_row_updated[1], employee_row_updated[2],
+                                employee_row_updated[3], employee_row_updated[4], employee_row_updated[5],
+                                employee_row_updated[6], employee_row_updated[7], employee_row_updated[8])

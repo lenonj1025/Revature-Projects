@@ -119,3 +119,10 @@ class EmployeeService:
         added_employee_obj = self.employee_dao.add_employee(employee_object)
 
         return added_employee_obj.to_dict()
+
+    def update_employee_by_id(self, employee_object):
+        updated_employee_object = self.employee_dao.update_employee_by_id(employee_object)
+        if updated_employee_object is None:
+            raise EmployeeNotFound(f"Customer with id {employee_object.id} was not found")
+
+        return updated_employee_object.to_dict()

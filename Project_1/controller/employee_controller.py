@@ -9,8 +9,6 @@ from exceptions.employee_not_found import EmployeeNotFound
 employee_control = Blueprint('employee_control', __name__)
 employee_service = EmployeeService()
 
-# update employee
-
 @employee_control.route('/employee/<employee_id>', methods=['GET'])
 def get_employee_by_id(employee_id):
     try:
@@ -92,5 +90,23 @@ def add_employee():
             "messages": e.messages
         }
     return added_employee, 201
+
+@employee_control.route('/employee/<employee_id>', methods=['PUT'])
+def update_customer_by_id(employee_id):
+    try:
+        employee_body_dict = request.get_json()
+        return employee_service.update_employee_by_id(Employee(employee_id, employee_body_dict['username'],
+                                                               employee_body_dict['password'],
+                                                               employee_body_dict['first_name'],
+                                                               employee_body_dict['last_name'],
+                                                               employee_body_dict['gender'],
+                                                               employee_body_dict['phone_number'],
+                                                               employee_body_dict['email_address'],
+                                                               employee_body_dict['role_employee']))
+    except EmployeeNotFound as e:
+        return{
+            "message": str(e)
+        }, 404
+
 
 

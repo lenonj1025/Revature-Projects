@@ -1,0 +1,2 @@
+class ReimbStatusError(Exception):
+    pass
