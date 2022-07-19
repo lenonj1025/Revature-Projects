@@ -1,12 +1,19 @@
 import re
 from dao.employee_dao import EmployeeDao
 from exceptions.employee_registration import EmployeeRegisterError
+from exceptions.employee_not_found import EmployeeNotFound
 from exceptions.login_error import LoginError
 from exceptions.employee_not_found import EmployeeNotFound
 
 class EmployeeService:
     def __init__(self):
         self.employee_dao = EmployeeDao()
+
+    def get_employee_by_id(self, employee_id):
+        employee_object = self.employee_dao.get_employee_by_id(employee_id)
+        if not employee_object:
+            raise EmployeeNotFound(f"Employee with the id {employee_id} was not found")
+        return employee_object.to_dict()
 
     # def get_all_employees(self):
     #     list_of_employees = self.employee_dao.get_all_employees()

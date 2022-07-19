@@ -4,6 +4,30 @@ from model.employee import Employee
 
 class EmployeeDao:
 
+    def get_employee_by_id(self, employee_id):
+        with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
+                             dbname="postgres", password="J1a0c2k5", options='-c search_path=project1') as conn:
+
+            with conn.cursor() as cur:
+                cur.execute("SELECT * FROM project1.employees WHERE id = %s", (employee_id,))
+
+                employee_row = cur.fetchone()
+                if not employee_row:
+                    return None
+
+                employee_id = employee_row[0]
+                username = employee_row[1]
+                password = employee_row[2]
+                first_name = employee_row[3]
+                last_name = employee_row[4]
+                gender = employee_row[5]
+                phone_number = employee_row[6]
+                email_address = employee_row[7]
+                role_employee = employee_row[8]
+
+                return Employee(employee_id, username, password, first_name, last_name, gender, phone_number,
+                                email_address, role_employee)
+
     # def get_all_employees(self):
     #     with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
     #                          dbname="postgres", password="J1a0c2k5", options='-c search_path=project1') as conn:
