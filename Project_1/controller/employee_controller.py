@@ -9,7 +9,7 @@ from exceptions.employee_not_found import EmployeeNotFound
 employee_control = Blueprint('employee_control', __name__)
 employee_service = EmployeeService()
 
-@employee_control.route('/employee/<employee_id>', methods=['GET'])
+@employee_control.route('/employees/<employee_id>', methods=['GET'])
 def get_employee_by_id(employee_id):
     try:
         return employee_service.get_employee_by_id(employee_id)
@@ -17,15 +17,15 @@ def get_employee_by_id(employee_id):
         return{
             "message": str(e)
         }, 404
-
-# @employee_control.route('/employees', methods=['GET'])
-# def get_employees():
-#     return {
-#         "employees": employee_service.get_all_employees()
-#     }
-
+# # @employee_control.route('/employees', methods=['GET'])
+# # def get_employees():
+# #     return {
+# #         "employees": employee_service.get_all_employees()
+# #     }
+#
 # @employee_control.route('/employees/<username>', methods=['GET'])
 # def get_employee_by_username(username):
+#     username = request.args.get('username')
 #     try:
 #         return employee_service.get_employee_by_username(username)
 #     except EmployeeNotFound as e:
@@ -41,6 +41,8 @@ def get_employee_by_id(employee_id):
 #         return {
 #             "message": str(e)
 #         }, 404
+
+
 @employee_control.route('/loginstatus', methods=['GET'])
 def loginstatus():
     if session.get('employee_info') is not None:
@@ -73,25 +75,25 @@ def login():
         return employee_dict, 200
     except LoginError as e:
         return {
-            "message":str(e)
+            "message": str(e)
         }, 400
 
-@employee_control.route('/employee', methods=['POST'])
+@employee_control.route('/employees', methods=['POST'])
 def add_employee():
     employee_body_dict = request.get_json()
-    employee_object = Employee(None, employee_body_dict['username'], employee_body_dict['password'],
-                               employee_body_dict['first_name'], employee_body_dict['last_name'],
-                               employee_body_dict['gender'], employee_body_dict['phone_number'],
-                               employee_body_dict['email_address'], employee_body_dict['role_employee'])
+    employee_object = Employee(None, employee_body_dict['username'],
+                               employee_body_dict['password'], employee_body_dict['first_name'],
+                               employee_body_dict['last_name'], employee_body_dict['gender'],
+                               employee_body_dict['phone_number'], employee_body_dict['email_address'],
+                               employee_body_dict['role_employee'])
     try:
-        added_employee = employee_service.add_employee(employee_object), 201
+        return  employee_service.add_employee(employee_object), 201
     except EmployeeRegisterError as e:
         return {
             "messages": e.messages
         }
-    return added_employee, 201
 
-@employee_control.route('/employee/<employee_id>', methods=['PUT'])
+@employee_control.route('/employees/<employee_id>', methods=['PUT'])
 def update_customer_by_id(employee_id):
     try:
         employee_body_dict = request.get_json()
