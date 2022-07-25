@@ -13,7 +13,7 @@ from exceptions.reimb_status_error import ReimbStatusError
 reimb_control = Blueprint('reimb_controller', __name__)
 reimb_service = ReimbService()
 
-@reimb_control.route('/employee/<employee_id>/reimbursements', methods=['GET'])
+@reimb_control.route('/employees/<employee_id>/reimbursements', methods=['GET'])
 def get_all_reimb_by_employee_id(employee_id):
     status = request.args.get('status')
 
@@ -40,7 +40,7 @@ def get_all_reimb_by_employee_id(employee_id):
                        "message": str(e)
                    }, 404
 
-@reimb_control.route('/employee/<employee_id>/reimbursements', methods=['POST'])
+@reimb_control.route('/employees/<employee_id>/reimbursements', methods=['POST'])
 def add_reimb_to_employee(employee_id):
     reimb_json_dictionary = request.get_json()
     reimb_object = Reimbursement(None, reimb_json_dictionary['amount'], None, None, reimb_json_dictionary['status'],
@@ -61,7 +61,7 @@ def add_reimb_to_employee(employee_id):
             "message": str(e)
         }, 404
 
-@reimb_control.route('/employee/<employee_id>/reimbursements/<reimbursements_id>', methods=['PUT'])
+@reimb_control.route('/employees/<employee_id>/reimbursements/<reimbursements_id>', methods=['PUT'])
 def update_reimb_by_ids(employee_id, reimbursements_id):
     try:
         reimb_json_dictionary = request.get_json()

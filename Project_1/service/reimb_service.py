@@ -15,6 +15,7 @@ class ReimbService:
     def get_all_reimb_by_employee_id(self, employee_id):
         if self.employee_dao.get_employee_by_id(employee_id) is None:
             raise EmployeeNotFound(f"Employee with id {employee_id} was not found")
+        # if self.reimb_dao_
         return list(map(lambda y: y.to_dict(), self.reimb_dao.get_all_reimb_by_employee_id(employee_id)))
 
     def get_reimb_by_status(self, employee_id, status):
