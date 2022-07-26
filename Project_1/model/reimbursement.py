@@ -23,5 +23,5 @@ class Reimbursement:
             "description": self.description,
             "receipt": self.receipt,
             "employee_id": self.employee_id,
-            "resolver": self.resolver_id
+            "resolver_id": self.resolver_id
         }

@@ -53,7 +53,7 @@ class EmployeeDao:
                     list_employees.append(my_employee_object)
 
                 return list_employees
-    #
+
     def get_employee_by_username_and_password(self, username, password):
         with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
                              dbname="postgres", password="J1a0c2k5", options='-c search_path=project1') as conn:
@@ -127,25 +127,25 @@ class EmployeeDao:
                 return Employee(employee_id, username, password, first_name, last_name, gender,
                                 phone_number, email_address, role_employee)
 
-    def add_employee(self, employee_obj):
-        with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
-                             dbname="postgres", password="J1a0c2k5", options='-c search_path=project1') as conn:
-            with conn.cursor() as cur:
-                cur.execute("INSERT INTO project1.employees (username, pwd, first_name, last_name, gender,"
-                            "phone_number, email_address, role_employee) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
-                            "RETURNING *",
-                            (employee_obj.username, employee_obj.password, employee_obj.first_name,
-                             employee_obj.last_name, employee_obj.gender, employee_obj.phone_number,
-                             employee_obj.email_address, employee_obj.role_employee))
-
-                employee_that_was_inserted = cur.fetchone()
-                conn.commit()
-
-                return Employee(employee_that_was_inserted[0], employee_that_was_inserted[1],
-                                employee_that_was_inserted[2], employee_that_was_inserted[3],
-                                employee_that_was_inserted[4], employee_that_was_inserted[5],
-                                employee_that_was_inserted[6], employee_that_was_inserted[7],
-                                employee_that_was_inserted[8])
+    # def add_employee(self, employee_obj):
+    #     with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
+    #                          dbname="postgres", password="J1a0c2k5", options='-c search_path=project1') as conn:
+    #         with conn.cursor() as cur:
+    #             cur.execute("INSERT INTO project1.employees (username, pwd, first_name, last_name, gender,"
+    #                         "phone_number, email_address, role_employee) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
+    #                         "RETURNING *",
+    #                         (employee_obj.username, employee_obj.password, employee_obj.first_name,
+    #                          employee_obj.last_name, employee_obj.gender, employee_obj.phone_number,
+    #                          employee_obj.email_address, employee_obj.role_employee))
+    #
+    #             employee_that_was_inserted = cur.fetchone()
+    #             conn.commit()
+    #
+    #             return Employee(employee_that_was_inserted[0], employee_that_was_inserted[1],
+    #                             employee_that_was_inserted[2], employee_that_was_inserted[3],
+    #                             employee_that_was_inserted[4], employee_that_was_inserted[5],
+    #                             employee_that_was_inserted[6], employee_that_was_inserted[7],
+    #                             employee_that_was_inserted[8])
 
     def update_employee_by_id(self, employee_object):
         with psycopg.connect(host="127.0.0.1", port="5432", user="postgres",

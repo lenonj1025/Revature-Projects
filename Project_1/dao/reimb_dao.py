@@ -17,7 +17,7 @@ class ReimbDao:
 
                 return list_reimbs
 
-    def get_reimbs_by_status(self, employee_id, status):
+    def get_reimb_by_status(self, employee_id, status):
         with psycopg.connect(host="127.0.0.1", port="5432", user='postgres',
                              dbname="postgres", password="J1a0c2k5", options='-c search_path=project1') as conn:
 
