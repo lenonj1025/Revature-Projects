@@ -305,9 +305,24 @@ def test_update_employee_by_id_negative(mocker):
         employee_service.update_employee_by_id(updated_employee_object)
     assert str(excinfo.value) == "Customer with id 10 was not found"
 
-# def test_login_positive(mocker):
-#     def mock_login(self, username, password):
-#         if username == "username123" and password == "password123":
-#             return None
-#     mocker.patch("dao.customer_dao.CustomerDao.add_customer", mock_add_customer_by_name)
-#     customer_object_to_add = Customer(None, "test123a", "test123b")
+def test_login_positive(mocker):
+    def mock_login(self, username, password):
+        if username == "username123" and password == "password123":
+            return Employee(1, "username123", "password123", "Test1A", "Test1B", "Male", "000-000-0000",
+                            "test123@test.com", "employee")
+        else:
+            return None
+    mocker.patch("dao.employee_dao.EmployeeDao.get_employee_by_username_and_password", mock_login)
+    employee_service = EmployeeService()
+    actual = employee_service.login("username123", "password123")
+    assert actual == {
+        "id": 1,
+        "username": "username123",
+        "password": "password123",
+        "first_name": "Test1A",
+        "last_name": "Test1B",
+        "gender": "Male",
+        "phone_number": "000-000-0000",
+        "email_address": "test123@test.com",
+        "role_employee": "employee"
+    }
