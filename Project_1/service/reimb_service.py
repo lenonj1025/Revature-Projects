@@ -3,7 +3,6 @@ from dao.reimb_dao import ReimbDao
 from model.reimbursement import Reimbursement
 from exceptions.employee_not_found import EmployeeNotFound
 from exceptions.reimb_not_found import ReimbNotFound
-from exceptions.reimb_type_error import ReimbTypeError
 from exceptions.reimb_status_error import ReimbStatusError
 from exceptions.no_negative_amounts import ReimbNegativeError
 
@@ -36,9 +35,6 @@ class ReimbService:
             raise ReimbNegativeError("Cannot have a negative amount!")
         if reimb_object.status != 'pending':
             raise ReimbStatusError("New reimbursements can only have a status of pending")
-        # if (reimb_object.reimb_type_id != 'Lodging') or (reimb_object.reimb_type_id != 'Travel') or
-        # (reimb_object.reimb_type_id != 'Food') or (reimb_object.reimb_type_id != 'Other'):
-        #     raise ReimbTypeError("Reimbursement type can only be Lodging, Travel, Food, or Other")
         added_new_reimb = self.reimb_dao.add_reimb_to_employee(reimb_object)
         return added_new_reimb.to_dict()
 

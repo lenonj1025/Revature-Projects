@@ -16,12 +16,7 @@ def get_employee_by_id(employee_id):
         return{
             "message": str(e)
         }, 404
-# # @employee_control.route('/employees', methods=['GET'])
-# # def get_employees():
-# #     return {
-# #         "employees": employee_service.get_all_employees()
-# #     }
-#
+
 # @employee_control.route('/employees/<username>', methods=['GET'])
 # def get_employee_by_username(username):
 #     username = request.args.get('username')
@@ -31,16 +26,6 @@ def get_employee_by_id(employee_id):
 #         return {
 #             "message": str(e)
 #         }, 404
-#
-# @employee_control.route('/employees/<email_address>', methods=['GET'])
-# def get_employee_by_email(email_address):
-#     try:
-#         return employee_service.get_employee_by_email(email_address)
-#     except EmployeeNotFound as e:
-#         return {
-#             "message": str(e)
-#         }, 404
-
 
 @employee_control.route('/loginstatus', methods=['GET'])
 def loginstatus():
@@ -76,21 +61,6 @@ def login():
         return {
             "message": str(e)
         }, 400
-
-# @employee_control.route('/employees', methods=['POST'])
-# def add_employee():
-#     employee_body_dict = request.get_json()
-#     employee_object = Employee(None, employee_body_dict['username'],
-#                                employee_body_dict['password'], employee_body_dict['first_name'],
-#                                employee_body_dict['last_name'], employee_body_dict['gender'],
-#                                employee_body_dict['phone_number'], employee_body_dict['email_address'],
-#                                employee_body_dict['role_employee'])
-#     try:
-#         return  employee_service.add_employee(employee_object), 201
-#     except EmployeeRegisterError as e:
-#         return {
-#             "messages": e.messages
-#         }
 
 @employee_control.route('/employees/<employee_id>', methods=['PUT'])
 def update_customer_by_id(employee_id):
